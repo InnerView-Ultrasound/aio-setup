@@ -6,17 +6,49 @@ There are two ways to achieve this: The normal way is creating multiple VMs, ins
 ## Run multiple AIO instances on the same server inside their own virtual machines
 This guide will walk you through creating and configuring two Debian VMs (with Nextcloud AIO) behind one Caddy reverse proxy on one physical host machine.
 1. Make sure your physical host machine has enough resources. 8GB ram and 100GB storage on the host machine is sufficent for running two very minimal Nextcloud AIO instances with 2GB ram and 32GB storage per VM. This tutorial assumes you have these resources at the minimum. This is fine if you are just tinkering or testing the setup. If your host machine has more memory and you plan to enable the optional containers, you should allocate more memory than what we select below.
-2. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following these instructions in order, and naming each VM the same as the domain name that will be used to access it. Assuming you are on a server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([help](https://wiki.debian.org/KVM)) and run this command (on the host machine):
+2. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following these instructions in order, and naming each VM the same as the domain name that will be used to access it. Assuming you are on a server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
 ```shell
 virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
 ```
 For this guide, we'll assume that we have two domains where we would like to host Nextcloud AIO, *example1.com* and *example2.com*. Therefore, we create 2 VMs named *example1-com* and *example2-com*.
 3. Running the above command will guide you through the CLI-based Debian installer. When asked, I recommend setting the hostname to the same value as the name you gave to your VM (for example, *example1-com*). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Most other installer options can remain default.
-4. Once your VM reboots, it will ask you to login to it. Use "root", enter the password you selected, and then run the following blob:
+4. Once your VM reboots, it will ask you to login to it. Use "root", enter the password you selected, and then run the following (**on the VM**):
 ```shell
 apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update && apt install caddy && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
 ```
-This will install 
+This really long command will install the latest stable Caddy, docker, and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
+5. Go ahead and run through steps 1-4 again in order to set up your second VM and Nextcloud AIO instance.
+6. Almost done! All that's left is configuring Caddy (**on the physical host machine**):
+```shell
+nano /etc/caddy/Caddyfile
+```
+Replace everything in this file with the following configuration:
+```shell
+https://example-1.com:8443 {
+    reverse_proxy https://[IP_ADDRESS_FOR_example1-com_VM]:8080 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+https://example-1.com:443 {
+    reverse_proxy [IP_ADDRESS_FOR_example1-com_VM]:11000
+}
+
+
+https://example-2.com:8443 {
+    reverse_proxy https://[IP_ADDRESS_FOR_example2-com_VM]:8080 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+https://example-2.com:443 {
+    reverse_proxy [IP_ADDRESS_FOR_example2-com_VM]:11000
+}
+```
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
