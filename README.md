@@ -12,6 +12,14 @@ https://[DOMAIN_1]:8443 {
     }
 }
 ```
+ALSO ADD:
+```
+https://[DOMAIN_1]:443 {
+    reverse_proxy [VM_1_IP_ADDRESS]:11000
+}
+```
+
+Both of those should be in caddy config on the host machine.
 
 You can use the default nextcloud aio reverse proxy command but don't bother configuring caddy the way it tells you to.
 
