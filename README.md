@@ -4,13 +4,14 @@ It is possible to run multiple instances of AIO on one server.
 There are two ways to achieve this: The normal way is creating multiple VMs, installing AIO in [reverse proxy mode](./reverse-proxy.md) in each of them and having one reverse proxy in front of them that points to each VM (you also need to [use a different `TALK_PORT`](https://github.com/nextcloud/all-in-one#how-to-adjust-the-talk-port) for each of them). The second and more advanced way is creating multiple users on the server and using docker rootless for each of them in order to install multiple instances on the same server. 
 
 ## Run multiple AIO instances on the same server inside their own virtual machines
-1. Create one virtual machine for each instance that you need first. I recommend fully configuring them one at a time, and naming each VM the same as the domain that will be used to access it. Assuming you are on a server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([help](https://wiki.debian.org/KVM)) and run this command:
+1. Make sure your host machine has enough resources. 8GB ram and 100GB storage on the host machine is sufficent for running two instances with 2GB ram and 32GB storage each. This tutorial assumes you have these resources at the minimum.
+2. Create one virtual machine for each instance that you need first. I recommend fully configuring them one at a time, and naming each VM the same as the domain that will be used to access it. Assuming you are on a server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([help](https://wiki.debian.org/KVM)) and run this command:
 ```
 virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
 ```
 For this example, we will assume that we have two domains where we would like to host Nextcloud AIO, *example1.com* and *example2.com*. Therefore, we create 2 VMs named *example1-com* and *example2-com*.
-2. Running the above command will guide you through the Debian installer. I recommend setting the hostname to the same value as the name you gave to your VM. When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Most other options can remain default.
-3. 
+3. Running the above command will guide you through the Debian installer. I recommend setting the hostname to the same value as the name you gave to your VM. When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Most other options can remain default.
+4. 
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
