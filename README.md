@@ -13,4 +13,12 @@ https://[DOMAIN_1]:8443 {
 }
 ```
 
+You can use the default nextcloud aio reverse proxy command but don't bother configuring caddy the way it tells you to.
+
+Inside the VM, use
+```shell
+ip a
+```
+to fetch the IP address that the host will use in it's caddy config.
+
 Inside VM, configure Nextcloud in reverse-proxy mode
