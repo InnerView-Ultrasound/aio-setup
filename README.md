@@ -13,4 +13,4 @@ https://[DOMAIN_1]:8443 {
 }
 ```
 
-Inside VM, configure Nextcloud normally, not in reverse-proxy mode
+Inside VM, configure Nextcloud in reverse-proxy mode
