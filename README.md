@@ -12,7 +12,9 @@ If your host machine has more than 8GB memory available and you plan to enable a
 
 For this guide, we'll assume that we have two domains where we would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we create 2 VMs named `example1-com` and `example2-com`.
 
-1. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following steps 1 through 3 in order, and naming each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
+We will set up each VM completely, one at a time, and then finish up by configuring our reverse proxy. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following steps 1 through 3 in order.
+
+1. I recommend naming each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
     ```shell
     virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
@@ -23,7 +25,7 @@ For this guide, we'll assume that we have two domains where we would like to hos
    apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update && apt install caddy && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
    ```
    This really long command will install the latest stable Caddy, docker, and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
-1. Go ahead and run through steps 1-5 again in order to set up your second VM and Nextcloud AIO instance.
+1. Go ahead and run through steps 1-3 again in order to set up your second VM and Nextcloud AIO instance.
 1. Almost done! All that's left is configuring Caddy. To do this, we need to find out the IP for each VM. Run (**on the physical host machine**):
     ```shell
     virsh net-dhcp-leases default
