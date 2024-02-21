@@ -9,55 +9,58 @@ This guide will walk you through creating and configuring two Debian VMs (with "
 First, make sure your physical host machine has enough resources. A host machine with 8GB RAM and 100GB storage is sufficent for running two fairly minimal VMs, with 2GB RAM and 32GB storage allocated to each VM. This tutorial assumes you have these resources at the minimum. This is fine for just testing the setup, but you will probably want to allocate more resources to your VMs if you plan to use this for day-to-day use.
 
 If your host machine has more than 8GB memory available and you plan to enable any of the optional containers (Nextcloud Office, Talk, Imaginary, etc.) in any of your instances, then you should definitely allocate more memory to the VM hosting that instance. Put simply, before turning on any extra features inside a particular AIO interface, make sure you've first allocated enough RAM to the VM that the instance is running inside. If in doubt, the AIO interface iteself actually gives good recommendations about how much extra RAM to allocate.
-1. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following steps 1 through 3 in order, and naming each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
-```shell
-virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
-```
+
 For this guide, we'll assume that we have two domains where we would like to host Nextcloud AIO, *example1.com* and *example2.com*. Therefore, we create 2 VMs named *example1-com* and *example2-com*.
-2. Running the above command will guide you through the CLI-based Debian installer. When asked, I recommend setting the hostname to the same value as the name you gave to your VM (for example, *example1-com*). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Most other installer options can remain default.
-3. Once your VM reboots, it will ask you to login to it. Use "root", enter the password you selected, and then run the following (**on the VM**):
-```shell
-apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update && apt install caddy && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
-```
-This really long command will install the latest stable Caddy, docker, and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
-4. Go ahead and run through steps 1-5 again in order to set up your second VM and Nextcloud AIO instance.
-5. Almost done! All that's left is configuring Caddy. To do this, we need to find out the IP for each VM. Run (**on the physical host machine**):
-```shell
-virsh net-dhcp-leases default
-```
-This will show you the VMs you set up, and the IP address corresponding to each of them. Note down each IP and corresponding hostname.
-Finally, we will configure Caddy using the information proided by virsh. Open the default Caddyfile:
-```shell
-nano /etc/caddy/Caddyfile
-```
-Replace everything in this file with the following configuration:
-```shell
-https://example-1.com:8443 {
-    reverse_proxy https://[IP_ADDRESS_FOR_example1-com_VM]:8080 {
-        transport http {
-            tls_insecure_skip_verify
+
+1. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following steps 1 through 3 in order, and naming each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
+    ```shell
+    virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
+    ```
+
+1. Running the above command will guide you through the CLI-based Debian installer. When asked, I recommend setting the hostname to the same value as the name you gave to your VM (for example, *example1-com*). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Most other installer options can remain default.
+1. Once your VM reboots, it will ask you to login to it. Use "root", enter the password you selected, and then run the following (**on the VM**):
+   ```shell
+   apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update && apt install caddy && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
+   ```
+   This really long command will install the latest stable Caddy, docker, and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
+1. Go ahead and run through steps 1-5 again in order to set up your second VM and Nextcloud AIO instance.
+1. Almost done! All that's left is configuring Caddy. To do this, we need to find out the IP for each VM. Run (**on the physical host machine**):
+    ```shell
+    virsh net-dhcp-leases default
+    ```
+    This will show you the VMs you set up, and the IP address corresponding to each of them. Note down each IP and corresponding hostname.
+    Finally, we will configure Caddy using the information proided by virsh. Open the default Caddyfile:
+    ```shell
+    nano /etc/caddy/Caddyfile
+    ```
+    Replace everything in this file with the following configuration:
+    ```shell
+    https://example-1.com:8443 {
+        reverse_proxy https://[IP_ADDRESS_FOR_example1-com_VM]:8080 {
+            transport http {
+                tls_insecure_skip_verify
+            }
         }
     }
-}
-
-https://example-1.com:443 {
-    reverse_proxy [IP_ADDRESS_FOR_example1-com_VM]:11000
-}
-
-
-https://example-2.com:8443 {
-    reverse_proxy https://[IP_ADDRESS_FOR_example2-com_VM]:8080 {
-        transport http {
-            tls_insecure_skip_verify
+    
+    https://example-1.com:443 {
+        reverse_proxy [IP_ADDRESS_FOR_example1-com_VM]:11000
+    }
+    
+    
+    https://example-2.com:8443 {
+        reverse_proxy https://[IP_ADDRESS_FOR_example2-com_VM]:8080 {
+            transport http {
+                tls_insecure_skip_verify
+            }
         }
     }
-}
-
-https://example-2.com:443 {
-    reverse_proxy [IP_ADDRESS_FOR_example2-com_VM]:11000
-}
-```
-If you haven't already, edit the sample configuration and substitute in your domain names and IP addresses.
+    
+    https://example-2.com:443 {
+        reverse_proxy [IP_ADDRESS_FOR_example2-com_VM]:11000
+    }
+    ```
+    If you haven't already, edit the sample configuration and substitute in your domain names and IP addresses.
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
@@ -71,47 +74,3 @@ If you haven't already, edit the sample configuration and substitute in your dom
 1. Please also do not forget to open/forward each chosen `TALK_PORT` UPD and TCP in your firewall/router as otherwise Talk will not work correctly!
 
 Now everything should be set up correctly and you should have created multiple working instances of AIO on the same server!
-
-
-
-
-
-
-
-
-
-
-
-
-# aio-setup
-Settings for multiple AIO instances + multiple domains
-
-Caddy file on host machine, not inside VM:
-
-```
-https://[DOMAIN_1]:8443 {
-    reverse_proxy https://[VM_1_IP_ADDRESS]:8080 {
-        transport http {
-            tls_insecure_skip_verify
-        }
-    }
-}
-```
-ALSO ADD:
-```
-https://[DOMAIN_1]:443 {
-    reverse_proxy [VM_1_IP_ADDRESS]:11000
-}
-```
-
-Both of those should be in caddy config on the host machine.
-
-You can use the default nextcloud aio reverse proxy command but don't bother configuring caddy the way it tells you to.
-
-Inside the VM, use
-```shell
-ip a
-```
-to fetch the IP address that the host will use in it's caddy config.
-
-Inside VM, configure Nextcloud in reverse-proxy mode
