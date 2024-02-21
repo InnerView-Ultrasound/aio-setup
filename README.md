@@ -10,7 +10,7 @@ First, make sure your physical host machine has enough resources. A host machine
 
 If your host machine has more than 8GB memory available and you plan to enable any of the optional containers (Nextcloud Office, Talk, Imaginary, etc.) in any of your instances, then you should definitely allocate more memory to the VM hosting that instance. Put simply, before turning on any extra features inside a particular AIO interface, make sure you've first allocated enough resources to the VM that the instance is running inside. If in doubt, the AIO interface iteself actually gives great recommendations regarding how much extra CPU and RAM to allocate.
 
-For this guide, we'll assume that we have two domains where we would like to host Nextcloud AIO, `example1.com` and `example2.com`. Therefore, we create 2 VMs named `example1-com` and `example2-com`.
+For this guide, we'll assume that we have two domains where we would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we create 2 VMs named `example1-com` and `example2-com`.
 
 1. Create one virtual machine for each instance that you need first. I recommend fully configuring each VM one at a time by following steps 1 through 3 in order, and naming each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
     ```shell
