@@ -24,8 +24,8 @@ This guide assumes that you have two domains where you would like to host two in
     virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
 
-1. Running the above command will guide you through the CLI-based Debian installer. When asked, I recommend setting the hostname to the same value as the name you gave to your VM (for example, `example1-com`). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Most other installer options can remain default.
-1. Once your VM reboots, it will ask you to login to it. Use "root", enter the password you selected, and then run the following (**on the VM**):
+1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Make sure to choose "/dev/vda" for GRUB.
+1. When finished, your new VM will reboot and ask you to log in. Use "root", enter the password you selected, and then run the following command (**on the VM**):
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
    ```
@@ -34,9 +34,6 @@ This guide assumes that you have two domains where you would like to host two in
 1. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the physical host machine**):
    ```shell
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
-   ```
-   ```shell
-   apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy && systemctl enable --now caddy
    ```
    This command will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
 1. We need to know the IP for each VM. Run (**on the physical host machine**):
