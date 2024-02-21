@@ -18,9 +18,9 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
 **Once you're ready, follow steps 1-3 below to set up your VMs.**
 
-1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, run this command (**on the physical host machine**). Don't forget to replace `[YOUR_VM_NAME]`.
+1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, run the following command (**on the physical host machine**). Don't forget to replace `[YOUR_VM_NAME]`.
     ```shell
-    virt-install --virt-type kvm --name [YOUR_VM_NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
+    virt-install --name [YOUR_VM_NAME] --virt-type kvm --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
 
 1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Make sure to choose "/dev/vda" for GRUB.
