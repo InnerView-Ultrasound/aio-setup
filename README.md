@@ -18,12 +18,12 @@ apt install -y debian-keyring debian-archive-keyring apt-transport-https curl &&
 ```
 This really long command will install the latest stable Caddy, docker, and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
 5. Go ahead and run through steps 1-5 again in order to set up your second VM and Nextcloud AIO instance.
-6. Almost done! All that's left is configuring Caddy. To do this, simply run (**on the physical host machine**):
+6. Almost done! All that's left is configuring Caddy. To do this, we need to find out the IP for each VM. Run (**on the physical host machine**):
 ```shell
 virsh net-dhcp-leases default
 ```
-This will show you the VMs you set up, and the IP address corresponding to each of them. Note the hostnames and IPs down, you will need them to configure Caddy in the next step!
-
+This will show you the VMs you set up, and the IP address corresponding to each of them. Note down each IP and corresponding hostname.
+Finally, we will configure Caddy using the information proided by virsh. Open the default Caddyfile:
 ```shell
 nano /etc/caddy/Caddyfile
 ```
@@ -54,6 +54,7 @@ https://example-2.com:443 {
     reverse_proxy [IP_ADDRESS_FOR_example2-com_VM]:11000
 }
 ```
+If you haven't already, edit the sample configuration and substitute in your domain names and IP addresses.
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
