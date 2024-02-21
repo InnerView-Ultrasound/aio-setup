@@ -44,31 +44,28 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     ```shell
     nano /etc/caddy/Caddyfile
     ```
-    Replace everything in this file with the following configuration. Don't forget to edit the sample configuration and substitute in your domain names and IP addresses. `[NAME_FOR_*_DOMAIN]` should be a domain name like `example1.com`, and `[IP_ADDRESS_FOR_*_VM]` should be an IPv4 address like `192.168.1.225`.
+    Replace everything in this file with the following configuration. Don't forget to edit the sample configuration and substitute in your domain names and IP addresses. `[DOMAIN_NAME_*]` should be a domain name like `example1.com`, and `[IP_ADDRESS_*]` should be an IPv4 address like `192.168.1.225`.
     ```shell
-    https://[NAME_FOR_example-1.com_DOMAIN]:8443 {
-        reverse_proxy https://[IP_ADDRESS_FOR_example1-com_VM]:8080 {
+    # Virtual machine #1 - "example1-com"
+    https://[DOMAIN_NAME_1]:8443 {
+        reverse_proxy https://[IP_ADDRESS_1]:8080 {
             transport http {
                 tls_insecure_skip_verify
             }
         }
+    } https://[DOMAIN_NAME_1]:443 {
+        reverse_proxy [IP_ADDRESS_1]:11000
     }
     
-    https://[NAME_FOR_example-1.com_DOMAIN]:443 {
-        reverse_proxy [IP_ADDRESS_FOR_example1-com_VM]:11000
-    }
-    
-    
-    https://[NAME_FOR_example-2.com_DOMAIN]:8443 {
-        reverse_proxy https://[IP_ADDRESS_FOR_example2-com_VM]:8080 {
+    # Virtual machine #2 - "example2-com"
+    https://[DOMAIN_NAME_2]:8443 {
+        reverse_proxy https://[IP_ADDRESS_2]:8080 {
             transport http {
                 tls_insecure_skip_verify
             }
         }
-    }
-    
-    https://[NAME_FOR_example-2.com_DOMAIN]:443 {
-        reverse_proxy [IP_ADDRESS_FOR_example2-com_VM]:11000
+    } https://[DOMAIN_NAME_2]:443 {
+        reverse_proxy [IP_ADDRESS_2]:11000
     }
     ```
 1. All set! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
