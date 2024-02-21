@@ -14,7 +14,7 @@ In order to create VMs, we'll need a few tools. Assuming your physcial host is a
 apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-system virtinst
 ```
 
-This guide assumes that you have two domains where you would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com`. (These are the VM names we'll use for step 1!)
+**Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com`. (These are the VM names we'll use below in step 1)
 
 **Once you're ready, follow steps 1-3 below to set up your VMs.**
 
