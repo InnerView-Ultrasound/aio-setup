@@ -35,16 +35,16 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
    ```
    This command will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
-1. We need to know the IP for each VM. Run (**on the physical host machine**):
+1. To configure Caddy, we need to know the IP address assigned to each VM. Run (**on the physical host machine**):
     ```shell
     virsh net-dhcp-leases default
     ```
     This will show you the VMs you set up, and the IP address corresponding to each of them. Note down each IP and corresponding hostname.
-    Finally, we will configure Caddy using the information proided by virsh. Open the default Caddyfile:
+    Finally, we will configure Caddy using the information proided by virsh. Open the default Caddyfile with a text editor:
     ```shell
     nano /etc/caddy/Caddyfile
     ```
-    Replace everything in this file with the following configuration. Don't forget to edit the sample configuration and substitute in your domain names and IP addresses. `[DOMAIN_NAME_*]` should be a domain name like `example1.com`, and `[IP_ADDRESS_*]` should be an IPv4 address like `192.168.1.225`.
+    Replace everything in this file with the following configuration. Don't forget to edit the sample configuration and substitute in your own domain names and IP addresses. `[DOMAIN_NAME_*]` should be a domain name like `example1.com`, and `[IP_ADDRESS_*]` should be a local IPv4 address like `192.168.1.225`.
     ```shell
     # Virtual machine #1 - "example1-com"
     https://[DOMAIN_NAME_1]:8443 {
