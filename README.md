@@ -4,7 +4,7 @@ It is possible to run multiple instances of AIO on one server.
 There are two ways to achieve this: The normal way is creating multiple VMs, installing AIO in [reverse proxy mode](./reverse-proxy.md) in each of them and having one reverse proxy in front of them that points to each VM (you also need to [use a different `TALK_PORT`](https://github.com/nextcloud/all-in-one#how-to-adjust-the-talk-port) for each of them). The second and more advanced way is creating multiple users on the server and using docker rootless for each of them in order to install multiple instances on the same server. 
 
 ## Run multiple AIO instances on the same server inside their own virtual machines
-This guide will walk you through creating and configuring two Debian VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one physical host machine. It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 7 only need to be completed once.
+This guide will walk you through creating and configuring two Debian VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one physical host machine. It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 7 only need to be completed once. **This guide assumes that you have already forwarded all necessary ports via your router's configuration page, and set up either Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide.**
 
 **Before starting:** Make sure your physical host machine has enough resources. A host machine with 8GB RAM and 100GB storage is sufficent for running two fairly minimal VMs, with 2GB RAM and 32GB storage allocated to each VM. This guide assumes you have these resources at the minimum. This is fine for just testing the setup, but you will probably want to allocate more resources to your VMs if you plan to use this for day-to-day use.
 If your host machine has more than 8GB memory available, and you plan to enable any of the optional containers (Nextcloud Office, Talk, Imaginary, etc.) in any of your instances, then you should definitely allocate more memory to the VM hosting that instance. In other words, before turning on any extra features inside a particular AIO interface, make sure you've first allocated enough resources to the VM that the instance is running inside. If in doubt, the AIO interface itself gives great recommendations for extra CPU and RAM allocation.
@@ -70,7 +70,11 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
         reverse_proxy [IP_ADDRESS_2]:11000
     }
     ```
-1. All set! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
+    After making this change, you'll need to restart caddy:
+   ```shell
+   systemctl restart caddy
+   ```
+1. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
