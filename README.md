@@ -53,7 +53,8 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
                 tls_insecure_skip_verify
             }
         }
-    } https://[DOMAIN_NAME_1]:443 {
+    }
+    https://[DOMAIN_NAME_1]:443 {
         reverse_proxy [IP_ADDRESS_1]:11000
     }
     
@@ -64,7 +65,8 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
                 tls_insecure_skip_verify
             }
         }
-    } https://[DOMAIN_NAME_2]:443 {
+    }
+    https://[DOMAIN_NAME_2]:443 {
         reverse_proxy [IP_ADDRESS_2]:11000
     }
     ```
