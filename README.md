@@ -18,10 +18,9 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
 **Once you're ready, follow steps 1-3 below to set up your VMs.**
 
-1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it.
-   Then, run this command (**on the physical host machine**):
+1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, run this command (**on the physical host machine**). Don't forget to replace `[YOUR_VM_NAME]`.
     ```shell
-    virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
+    virt-install --virt-type kvm --name [YOUR_VM_NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
 
 1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Make sure to choose "/dev/vda" for GRUB.
@@ -45,9 +44,9 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     ```shell
     nano /etc/caddy/Caddyfile
     ```
-    Replace everything in this file with the following configuration:
+    Replace everything in this file with the following configuration. Don't forget to edit the sample configuration and substitute in your domain names and IP addresses. `[NAME_FOR_*_DOMAIN]` should be a domain name like `example1.com`, and `[IP_ADDRESS_FOR_*_VM]` should be an IPv4 address like `192.168.1.225`.
     ```shell
-    https://example-1.com:8443 {
+    https://[NAME_FOR_example-1.com_DOMAIN]:8443 {
         reverse_proxy https://[IP_ADDRESS_FOR_example1-com_VM]:8080 {
             transport http {
                 tls_insecure_skip_verify
@@ -55,12 +54,12 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
         }
     }
     
-    https://example-1.com:443 {
+    https://[NAME_FOR_example-1.com_DOMAIN]:443 {
         reverse_proxy [IP_ADDRESS_FOR_example1-com_VM]:11000
     }
     
     
-    https://example-2.com:8443 {
+    https://[NAME_FOR_example-2.com_DOMAIN]:8443 {
         reverse_proxy https://[IP_ADDRESS_FOR_example2-com_VM]:8080 {
             transport http {
                 tls_insecure_skip_verify
@@ -68,11 +67,10 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
         }
     }
     
-    https://example-2.com:443 {
+    https://[NAME_FOR_example-2.com_DOMAIN]:443 {
         reverse_proxy [IP_ADDRESS_FOR_example2-com_VM]:11000
     }
     ```
-    If you haven't already, edit the sample configuration and substitute in your domain names and IP addresses.
 1. All set! Now, all that's left is to set up your servers through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
 
 ## Run multiple AIO instances on the same server with docker rootless
