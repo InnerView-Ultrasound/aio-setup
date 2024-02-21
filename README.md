@@ -24,7 +24,7 @@ We will set up each VM completely, one at a time, and then finish up by configur
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
    ```
-   This command will install docker and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
+   This command will install docker and AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
 1. Go ahead and run through steps 1-3 again in order to set up your second VM, then head down to step 5.
 1. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the physical host machine**):
    ```shell
