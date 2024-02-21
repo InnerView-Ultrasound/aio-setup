@@ -9,11 +9,11 @@ This guide will walk you through creating and configuring two Debian VMs (with "
 **Before starting:** Make sure your physical host machine has enough resources. A host machine with 8GB RAM and 100GB storage is sufficent for running two fairly minimal VMs, with 2GB RAM and 32GB storage allocated to each VM. This guide assumes you have these resources at the minimum. This is fine for just testing the setup, but you will probably want to allocate more resources to your VMs if you plan to use this for day-to-day use.
 If your host machine has more than 8GB memory available, and you plan to enable any of the optional containers (Nextcloud Office, Talk, Imaginary, etc.) in any of your instances, then you should definitely allocate more memory to the VM hosting that instance. In other words, before turning on any extra features inside a particular AIO interface, make sure you've first allocated enough resources to the VM that the instance is running inside. If in doubt, the AIO interface itself gives great recommendations for extra CPU and RAM allocation.
 
-This guide assumes that you have two domains where you would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com`.
+This guide assumes that you have two domains where you would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com`. (These are the VM names we'll use for step 1!)
 
-Once you're ready, follow steps 1-3 below to set up these VMs.
+**Once you're ready, follow steps 1-3 below to set up your VMs.**
 
-1. I recommend naming each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
+1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Assuming your physcial host is a barebones Linux server without a desktop environment installed, the easiest way is to install QEMU/KVM + virt-install + virsh ([read more](https://wiki.debian.org/KVM)) and run this command (**on the physical host machine**):
     ```shell
     virt-install --virt-type kvm --name [YOUR-VM-NAME] --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
