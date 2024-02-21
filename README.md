@@ -26,9 +26,9 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
 **Once you're ready, follow steps 1-3 below to set up your VMs.**
 
-1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, run the following command (**on the physical host machine**). Don't forget to replace `[YOUR_VM_NAME]`.
+1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, run the following command (**on the physical host machine**). Don't forget to replace `[VM_NAME]`.
     ```shell
-    virt-install --name [YOUR_VM_NAME] --virt-type kvm --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
+    virt-install --name [VM_NAME] --virt-type kvm --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
 
 1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (Lets you easily login again in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, virtual- this will not prevent your physical host machine from booting) and select `/dev/vda` for the bootable device.
