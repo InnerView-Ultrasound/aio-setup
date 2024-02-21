@@ -6,8 +6,8 @@ There are two ways to achieve this: The normal way is creating multiple VMs, ins
 ## Run multiple AIO instances on the same server inside their own virtual machines
 This guide will walk you through creating and configuring two Debian VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one physical host machine (like a laptop or desktop PC). It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 7 only need to be completed once.
 
-<details><summary><strong>Expectations for your network</strong></summary>
-<strong>This guide assumes that you have already forwarded all necessary ports via your router's configuration page, and either set up Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide.</strong>
+<details><summary><strong>PLEASE READ: A few expectations about your network</strong></summary>
+<strong>This guide assumes that you have already forwarded all necessary ports via your router's configuration page, and either set up Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide, unless you are just using it for educational purposes. Proper network setup and security is critical when it comes to keeping your data safe. You may consider hosting using a VPS instead, or choosing one of <a href="https://nextcloud.com/providers/">Nextcloud's trusted providers.</a></strong>
 </details>
 
 <details><summary><strong>A note for VPS users</strong></summary>
