@@ -26,14 +26,14 @@ We will set up each VM completely, one at a time, and then finish up by configur
    ```
    This command will install docker and Nextcloud AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
 1. Go ahead and run through steps 1-3 again in order to set up your second VM, then head down to step 5.
-1. Almost done! All that's left is configuring Caddy. To do this, we first need to install it. Run (**on the physical host machine**):
+1. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the physical host machine**):
    ```shell
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
    ```
    ```shell
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy && systemctl enable --now caddy
    ```
-   This command ensures that your system is up-to-date, installs the latest stable version of Caddy via it's official binary source, and ensures that it gets enabled.
+   This command will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
 1. We need to know the IP for each VM. Run (**on the physical host machine**):
     ```shell
     virsh net-dhcp-leases default
