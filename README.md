@@ -24,7 +24,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     ```
 
 1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). When *tasksel* runs and asks you to install a desktop, uncheck the "debian graphical" and "GNOME" options, and check the "ssh server" option (so that you may easily login to configure it). Make sure "standard system utilities" is also checked. Make sure to choose "/dev/vda" for GRUB.
-1. When finished, your new VM will reboot and ask you to log in. Use "root", enter the password you selected, and then run the following command (**on the VM**):
+1. When finished, your new VM will reboot and ask you to log in. Use "root" as the username, enter the password you selected, and then run the following command (**on the VM**):
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
    ```
