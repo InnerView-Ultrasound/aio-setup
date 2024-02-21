@@ -36,7 +36,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
    ```
-   This command will install docker and AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it.
+   This command will install docker and AIO in reverse proxy mode! As with any other command, try your best to carefully read over it and understand it before running it. This may take a minute or two. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". This concludes the setup needed on this particular VM.
 1. Go ahead and run through steps 1-3 again in order to set up your second VM, then head down to step 5.
 1. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the physical host machine**):
    ```shell
