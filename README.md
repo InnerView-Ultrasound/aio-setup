@@ -4,7 +4,7 @@ It is possible to run multiple instances of AIO on one server.
 There are two ways to achieve this: The normal way is creating multiple VMs, installing AIO in [reverse proxy mode](./reverse-proxy.md) in each of them and having one reverse proxy in front of them that points to each VM (you also need to [use a different `TALK_PORT`](https://github.com/nextcloud/all-in-one#how-to-adjust-the-talk-port) for each of them). The second and more advanced way is creating multiple users on the server and using docker rootless for each of them in order to install multiple instances on the same server. 
 
 ## Run multiple AIO instances on the same server inside their own virtual machines
-This guide will walk you through creating and configuring two Debian VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one physical host machine (like a laptop or desktop PC). It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 7 only need to be completed once.
+This guide will walk you through creating and configuring two Debian VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one physical host machine (like a laptop or desktop PC). It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 8 only need to be completed once.
 
 <details><summary><strong>PLEASE READ: A few expectations about your network</strong></summary>
 <strong>This guide assumes that you have <a href="https://github.com/nextcloud/all-in-one?tab=readme-ov-file#which-ports-are-mandatory-to-be-open-in-your-firewallrouter">already forwarded all necessary ports</a> via your router's configuration page, and either set up Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide, unless you are just using it for educational purposes. Proper network setup and security is critical when it comes to keeping your data safe. You may consider hosting using a VPS instead, or choosing one of <a href="https://nextcloud.com/providers/">Nextcloud's trusted providers.</a></strong>
@@ -40,6 +40,10 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    
    ---
 1. Go ahead and run through steps 1-3 again in order to set up your second VM. When you're finished, proceed down to step 5.
+1. To ensure your new machines always stay up and running, run (**on the physical host machine**):
+   ```shell
+   virsh autostart --domain [VM_NAME] # Do this for each VM
+   ```
 1. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the physical host machine**):
    ```shell
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
