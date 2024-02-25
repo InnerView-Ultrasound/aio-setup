@@ -85,9 +85,14 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    systemctl restart caddy
    ```
 1. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
+    <!--
     <details><summary>A few extra tips!</summary>
-    - Use `virsh autostart --domain [VM_NAME]` to 
+    <ul>
+        <li>Use `virsh autostart --domain [VM_NAME]` to set a VM to start automatically as soon as the physical host machine finishes booting. Highly recommended if you want to achieve minimal downtime.</li>
+        <li>Use `virsh autostart --domain [VM_NAME]` to set a VM to start automatically as soon as the physical host machine finishes booting. Highly recommended if you want to achieve minimal downtime.</li>
+    </ul>
     </details>
+   -->
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
