@@ -54,7 +54,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     virsh net-dhcp-leases default
     ```
     This will show you the VMs you set up, and the IP address corresponding to each of them. Note down each IP and corresponding hostname.
-    Finally, we will configure Caddy using the information proided by virsh. Open the default Caddyfile with a text editor:
+    Finally, we will configure Caddy using this information. Open the default Caddyfile with a text editor:
     ```shell
     nano /etc/caddy/Caddyfile
     ```
