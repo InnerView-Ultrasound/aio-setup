@@ -7,11 +7,11 @@ There are two ways to achieve this: The normal way is creating multiple VMs, ins
 This guide will walk you through creating and configuring two Debian VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one physical host machine (like a laptop or desktop PC). It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 7 only need to be completed once.
 
 <details><summary><strong>PLEASE READ: A few expectations about your network</strong></summary>
-<strong>This guide assumes that you have already forwarded all necessary ports via your router's configuration page, and either set up Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide, unless you are just using it for educational purposes. Proper network setup and security is critical when it comes to keeping your data safe. You may consider hosting using a VPS instead, or choosing one of <a href="https://nextcloud.com/providers/">Nextcloud's trusted providers.</a></strong>
+<strong>This guide assumes that you have <a href="https://github.com/nextcloud/all-in-one?tab=readme-ov-file#which-ports-are-mandatory-to-be-open-in-your-firewallrouter">already forwarded all necessary ports</a> via your router's configuration page, and either set up Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide, unless you are just using it for educational purposes. Proper network setup and security is critical when it comes to keeping your data safe. You may consider hosting using a VPS instead, or choosing one of <a href="https://nextcloud.com/providers/">Nextcloud's trusted providers.</a></strong>
 </details>
 
 <details><summary><strong>A note for VPS users</strong></summary>
-If your VPS is KVM-based and provides a static IP address, you'll likely be able to benefit from this guide as well! Simply replace the words "physical host machine" with "VPS". Good luck!
+If you want to do this on a VPS, and your VPS is KVM-based and provides a static IP address, you can likely benefit from this guide too! Simply replace the words "physical host machine" with "VPS" and follow along. Good luck!
 </details>
 
 **Before starting:** Make sure your physical host machine has enough resources. A host machine with 8GB RAM and 100GB storage is sufficent for running two fairly minimal VMs, with 2GB RAM and 32GB storage allocated to each VM. This guide assumes you have these resources at the minimum. This is fine for just testing the setup, but you will probably want to allocate more resources to your VMs if you plan to use this for day-to-day use.
@@ -85,6 +85,9 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    systemctl restart caddy
    ```
 1. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
+    <details><summary>A few extra tips!</summary>
+    - Use `virsh autostart --domain [VM_NAME]` to 
+    </details>
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
