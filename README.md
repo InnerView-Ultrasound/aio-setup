@@ -86,7 +86,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
     # (Add more configurations here if you set up more than two VMs!)
     ```
-    After making this change, you'll need to restart caddy:
+    After making this change, you'll need to restart Caddy:
    ```shell
    systemctl restart caddy
    ```
