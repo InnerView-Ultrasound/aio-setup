@@ -94,7 +94,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     
     <details><summary>A few extra tips for managing your VMs!</summary>
         <ul>
-            <li>You can SSH into a VM to perform maintenance using this command (<strong>on the physical host machine</strong>): <pre>ssh [NONROOT_USER]@[IP_ADDRESS]</pre></li>
+            <li>You can SSH into a VM to perform maintenance using this command (<strong>on the physical host machine</strong>): <pre>ssh [NONROOT_USER]@[IP_ADDRESS] # By default you cannot log in using the root account</pre></li>
             <li>If you mess up the configuration of a VM, you may wish to completely delete it and start fresh with a new one. <strong>THIS WILL DELETE ALL DATA ASSOCIATED WITH THE VM INCLUDING ANYTHING IN YOUR AIO DATADIR!</strong> To do this, run (<strong>on the physical host machine</strong>): <pre>virsh undefine --domain [VM_NAME] && rm -rf /var/lib/libvirt/images/[VM_NAME].qcow2 # BE EXTREMELY CAREFUL!</pre></li>
         </ul>
     </details>
