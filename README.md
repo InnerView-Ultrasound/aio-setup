@@ -42,7 +42,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 1. Go ahead and run through steps 1-3 again in order to set up your second VM. When you're finished, proceed down to step 5.
 1. Set your new VMs to start automatically each time the physical host machine finishes booting. Run (**on the physical host machine**):
    ```shell
-   virsh autostart --domain [VM_NAME] # Do this for each VM
+   virsh autostart --domain [VM_NAME] # Do this for each of your VMs
    ```
 1. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the physical host machine**):
    ```shell
