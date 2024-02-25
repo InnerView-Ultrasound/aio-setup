@@ -92,7 +92,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    ```
 1. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
     
-    <details><summary>A few extra tips for managing your VMs!</summary>
+    <details><summary>A few extra tips for managing this setup!</summary>
         <ul>
             <li>You can SSH into a VM to perform maintenance using this command (<strong>on the physical host machine</strong>): <pre>ssh [NONROOT_USER]@[IP_ADDRESS] # By default you cannot log in using the root account</pre></li>
             <li>If you mess up the configuration of a VM, you may wish to completely delete it and start fresh with a new one. <strong>THIS WILL DELETE ALL DATA ASSOCIATED WITH THE VM INCLUDING ANYTHING IN YOUR AIO DATADIR!</strong> To do this, run (<strong>on the physical host machine</strong>): <pre>virsh undefine --domain [VM_NAME] && rm -rf /var/lib/libvirt/images/[VM_NAME].qcow2 # BE EXTREMELY CAREFUL!</pre></li>
