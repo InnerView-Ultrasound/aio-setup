@@ -31,7 +31,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     virt-install --name [VM_NAME] --virt-type kvm --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
 
-1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (Lets you easily login again in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, virtual- this will not prevent your physical host machine from booting) and select `/dev/vda` for the bootable device.
+1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (Lets you easily SSH into the machine in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, virtual- this will not prevent your physical host machine from booting) and select `/dev/vda` for the bootable device.
 1. Log in to your new VM. When it's finished installing, your new VM will reboot and present you with a login prompt. Use "root" as the username, and enter the password you chose during the installation process. Then, run this command (**on the VM**):
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
@@ -89,14 +89,14 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    systemctl restart caddy
    ```
 1. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
-    <!--
-    <details><summary>A few extra tips!</summary>
-    <ul>
-        <li>Use `virsh autostart --domain [VM_NAME]` to set a VM to start automatically as soon as the physical host machine finishes booting. Highly recommended if you want to achieve minimal downtime.</li>
-        <li>Use `virsh autostart --domain [VM_NAME]` to set a VM to start automatically as soon as the physical host machine finishes booting. Highly recommended if you want to achieve minimal downtime.</li>
-    </ul>
+    
+    <details><summary>A few extra tips for managing your VMs!</summary>
+        <ul>
+            <li>You can SSH into a VM to perform maintenance using this command (<strong>on the physical host machine</strong>): <pre>ssh [NONROOT_USER]@[IP_ADDRESS]</pre></li>
+            <li>If you mess up the configuration of a VM, you may wish to completely delete it and start fresh with a new one. <strong>THIS WILL DELETE ALL DATA ASSOCIATED WITH THE VM INCLUDING ANYTHING IN YOUR AIO DATADIR!</strong> To do this, run (<strong>on the physical host machine</strong>): <pre>virsh undefine --domain [VM_NAME] && rm -rf /var/lib/libvirt/images/[VM_NAME].qcow2</pre></li>
+        </ul>
     </details>
-   -->
+   
 
 ## Run multiple AIO instances on the same server with docker rootless
 1. Create as many linux users as you need first. The easiest way is to use `sudo adduser` and follow the setup for that. Make sure to create a strong unique password for each of them and write it down!
