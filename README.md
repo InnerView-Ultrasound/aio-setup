@@ -58,7 +58,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     ```shell
     nano /etc/caddy/Caddyfile
     ```
-    Replace everything in this file with the following configuration. Don't forget to edit the sample configuration and substitute in your own domain names and IP addresses. `[DOMAIN_NAME_*]` should be a domain name like `example1.com`, and `[IP_ADDRESS_*]` should be a local IPv4 address like `192.168.1.225`.
+    Replace everything in this file with the following configuration. Don't forget to edit this sample configuration and substitute in your own domain names and IP addresses. `[DOMAIN_NAME_*]` should be a domain name like `example1.com`, and `[IP_ADDRESS_*]` should be a local IPv4 address like `192.168.1.225`.
     ```shell
     # Virtual machine #1 - "example1-com"
     https://[DOMAIN_NAME_1]:8443 {
