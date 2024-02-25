@@ -22,7 +22,7 @@ If your host machine has more than 8GB memory available, and you plan to enable 
 apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-system virtinst
 ```
 
-**Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances. Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com` (These are the VM names we'll use below in step 1).
+**Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances (one instance per domain). Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com` (These are the VM names we'll use below in step 1).
 
 **Once you're ready, follow steps 1-3 below to set up your VMs.**
 
