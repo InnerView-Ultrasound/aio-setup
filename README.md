@@ -83,6 +83,8 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     https://[DOMAIN_NAME_2]:443 {
         reverse_proxy [IP_ADDRESS_2]:11000
     }
+
+    # (Add more configurations here if you set up more than two VMs!)
     ```
     After making this change, you'll need to restart caddy:
    ```shell
