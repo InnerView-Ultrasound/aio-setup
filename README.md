@@ -22,7 +22,7 @@ If your host machine has more than 8GB memory available, and you plan to enable 
 apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-system virtinst
 ```
 
-**Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances (one instance per domain). Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com` (These are the VM names we'll use below in step 1).
+**Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances (one instance per domain). Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com` (These are the VM names chosen below in step 1).
 
 **Once you're ready, follow steps 1-3 below to set up your VMs.**
 
@@ -31,7 +31,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     virt-install --name [VM_NAME] --virt-type kvm --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
 
-1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (This lets you easily SSH into the VM in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, it's only virtual, and this only applies to the VM- this will not affect the boot configuration of your physical host machine) and select `/dev/vda` for the bootable device.
+1. Navigate through the text-based Debian installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that you defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (This lets you easily SSH into the VM in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, it's only virtual, and this only applies to the VM- this will not affect the boot configuration of your physical host machine) and select `/dev/vda` for the bootable device.
 1. Log in to your new VM. After it's finished installing, the VM will have rebooted and presented you with a login prompt. Use `root` as the username, and enter the password you chose during the installation process. Then, run this command (**on the VM**):
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
@@ -49,12 +49,12 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
    ```
    This command will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
-1. To configure Caddy, we need to know the IP address assigned to each VM. Run (**on the physical host machine**):
+1. To configure Caddy, you need to know the IP address assigned to each VM. Run (**on the physical host machine**):
     ```shell
     virsh net-dhcp-leases default
     ```
     This will show you the VMs you set up, and the IP address corresponding to each of them. Note down each IP and corresponding hostname.
-    Finally, we will configure Caddy using this information. Open the default Caddyfile with a text editor:
+    Finally, you'll configure Caddy using this information. Open the default Caddyfile with a text editor:
     ```shell
     nano /etc/caddy/Caddyfile
     ```
