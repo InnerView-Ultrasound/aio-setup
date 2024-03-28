@@ -21,6 +21,12 @@ If your host machine has more than 8GB memory available, and you plan to enable 
 ```shell
 apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-system virtinst
 ```
+If you're running a graphical desktop on your physical host machine, you may prefer using [virt-manager](https://virt-manager.org/) instead of virsh.
+
+Lastly, the "extra tips" section at the end of this guide will help with advanced use cases. Many of these tips require slight tweaks to the commands used in this guide. Therefore, it's helpful to read that section **in advance** if you want to enable any of the following features:
+- Support for storing more than 2TB of data
+- Nextcloud Talk
+- SSH access
 
 **Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances (one instance per domain). Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com` (These are the VM names chosen below in step 1).
 
