@@ -57,7 +57,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    This single command will install docker and AIO in reverse proxy mode! As with any other command, carefully read over it and try your best to understand it before running it. This may take a few minutes. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". This concludes the setup needed on this particular VM.
    
    ---
-1. Go ahead and run through steps 1-3 again in order to set up your second VM. When you're finished, proceed down to step 5.
+1. Go ahead and run through steps 1-3 again in order to set up your second VM. When you're finished, proceed down to step 5. (Note: If you downloaded the Ubuntu .iso and no longer want it, you may delete it now.)
 1. Set your new VMs to start automatically each time the host physical machine finishes booting. Run (**on the host physical machine**):
    ```shell
    virsh autostart --domain [VM_NAME] # Do this for each of your VMs
