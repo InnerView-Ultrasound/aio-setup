@@ -19,7 +19,7 @@ Now everything should be set up correctly and you should have created multiple w
 
 
 ## Run multiple AIO instances on the same server inside their own virtual machines
-This guide will walk you through creating and configuring two Debian-based VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one host physical machine (like a laptop or desktop PC). It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 8 only need to be completed once.
+This guide will walk you through creating and configuring two Debian-based VMs (with "reverse proxy mode" Nextcloud AIO installed in each VM), behind one Caddy reverse proxy, all running on one host physical machine (like a laptop or desktop PC). It's highly recommend to follow the steps in order. Steps 1 through 3 will need to be repeated. Steps 4 through 8 only need to be completed once. All commands are expected to be run as root.
 
 <details><summary><strong>PLEASE READ: A few expectations about your network</strong></summary>
 This guide assumes that you have forwarded ports 443 and 8443 to your host physical machine via your router's configuration page, and either set up Dynamic DNS or obtained a static outbound IP address from your ISP. If this is not the case, or if you are brand-new to networking, you probably should not proceed with this guide, unless you are just using it for educational purposes. Proper network setup and security is critical when it comes to keeping your data safe. You may consider hosting using a VPS instead, or choosing one of <a href="https://nextcloud.com/providers/">Nextcloud's trusted providers.</a>
@@ -42,9 +42,24 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
 **Let's begin!** This guide assumes that you have two domains where you would like to host two individual AIO instances (one instance per domain). Let's call these domains `example1.com` and `example2.com`. Therefore, we'll create two VMs named `example1-com` and `example2-com` (These are the VM names we'll use below in step 1).
 
-**Once you're ready, follow steps 1-3 below to set up your VMs.**
+**Once you're ready, follow steps 1-3 below to set up your VMs. You will configure them one at a time.**
 
-1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, run the following command (**on the host physical machine**). Don't forget to replace `[VM_NAME]`.
+1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, choose the distribution you'd like to install within the VM:
+   <details><summary><strong>Ubuntu Server LTS</strong></summary>
+       Ubuntu no longer seems to provide remote installation trees, meaning you'll first need to download an .iso image.
+       <pre><code>curl -O https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
+   var x = 2
+   </code></pre>
+       This is a test.
+       This is also a test.
+   </details>
+   <details><summary><strong>Debian 11</strong></summary>
+   </details>
+   <details><summary><strong>Debian 12</strong></summary>
+   </details>
+   For more options, or for help automating this process, check out <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install">this guide</a>.
+
+run the following command (**on the host physical machine**). Don't forget to replace `[VM_NAME]`.
     ```shell
     virt-install --name [VM_NAME] --virt-type kvm --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ --os-variant debian11 --disk size=32 --memory 2048 --graphics none --console pty,target_type=serial --extra-args "console=ttyS0"
     ```
@@ -112,9 +127,11 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
     
     <details><summary>A few extra tips for managing this setup!</summary>
         <ul>
-            <li>You can SSH into a VM to perform maintenance using this command (<strong>on the host physical machine</strong>): <pre>ssh [NONROOT_USER]@[IP_ADDRESS] # By default openssh does not allow logins using the root account</pre></li>
-            <li>If you mess up the configuration of a VM, you may wish to completely delete it and start fresh with a new one. <strong>THIS WILL DELETE ALL DATA ASSOCIATED WITH THE VM INCLUDING ANYTHING IN YOUR AIO DATADIR!</strong> To do this, run (<strong>on the host physical machine</strong>): <pre>virsh undefine --domain [VM_NAME] && rm -rf /var/lib/libvirt/images/[VM_NAME].qcow2 # BE EXTREMELY CAREFUL!</pre></li>
-            <li>Using Nextcloud Talk will require some extra configuration. Back when we set up our VMs, they were (by default) configured with NAT, meaning they are in their own subnet. My understanding is that the VMs must each instead be bridged, so that your router may directly "see" them (as if they were real, physical devices on your network), and each AIO instance inside each VM must be configured with a different Talk port (like 3478, 3479, etc.). To change the Talk port for a given instance, you must either have created it that way initially (back when you first configured the VM in step 3 above), or you can change it at any time by removing the mastercontainer and re-running the initial docker run command (but modifying the run command <a href="https://github.com/nextcloud/all-in-one?tab=readme-ov-file#how-to-adjust-the-talk-port">like so</a>). Then, the Talk port for EACH instance needs to be forwarded in your router's settings DIRECTLY to the VM hosting the instance (completely bypassing our host physical machine/reverse proxy). And finally, inside an admin-priveleged account (such as the default "admin" account) in each instance, you must visit <pre>https://[DOMAIN_NAME_*]/settings/admin/talk</pre> then find the STUN/TURN Settings, and from there set the proper values. If this is too complicated, it may be easier to use public STUN/TURN servers, but I have not tested any of this, rather I'm just sharing what I have found so far (more info available <a href="https://github.com/nextcloud/all-in-one/discussions/2517">here</a>). If you have figured this out or if any of this information is incorrect, please edit this section!</li>
+            <li>You can SSH into a VM to perform maintenance using this command (<strong>on the host physical machine</strong>): <pre><code>ssh [NONROOT_USER]@[IP_ADDRESS] # By default openssh does not allow logins using the root account</code></pre></li>
+            <li>If you mess up the configuration of a VM, you may wish to completely delete it and start fresh with a new one. <strong>THIS WILL DELETE ALL DATA ASSOCIATED WITH THE VM INCLUDING ANYTHING IN YOUR AIO DATADIR!</strong> To do this, run (<strong>on the host physical machine</strong>): <pre><code># BE EXTREMELY CAREFUL! You'll need to confirm this action (y/N)
+   virsh destroy --domain [VM_NAME] \
+   virsh undefine --nvram --domain [VM_NAME] && rm -rf /var/lib/libvirt/images/[VM_NAME].qcow2</code></pre></li>
+            <li>Using Nextcloud Talk will require some extra configuration. Back when we set up our VMs, they were (by default) configured with NAT, meaning they are in their own subnet. My understanding is that the VMs must each instead be bridged, so that your router may directly "see" them (as if they were real, physical devices on your network), and each AIO instance inside each VM must be configured with a different Talk port (like 3478, 3479, etc.). To change the Talk port for a given instance, you must either have created it that way initially (back when you first configured the VM in step 3 above), or you can change it at any time by removing the mastercontainer and re-running the initial docker run command (but modifying the run command <a href="https://github.com/nextcloud/all-in-one?tab=readme-ov-file#how-to-adjust-the-talk-port">like so</a>). Then, the Talk port for EACH instance needs to be forwarded in your router's settings DIRECTLY to the VM hosting the instance (completely bypassing our host physical machine/reverse proxy). And finally, inside an admin-priveleged account (such as the default "admin" account) in each instance, you must visit <strong>https://[DOMAIN_NAME_*]/settings/admin/talk</strong> then find the STUN/TURN Settings, and from there set the proper values. If this is too complicated, it may be easier to use public STUN/TURN servers, but I have not tested any of this, rather I'm just sharing what I have found so far (more info available <a href="https://github.com/nextcloud/all-in-one/discussions/2517">here</a>). If you have figured this out or if any of this information is incorrect, please edit this section!</li>
             <li>If you want to shave off around 8-10 seconds of total boot time when you reboot your host physical machine, a simple trick is to lower the GRUB_TIMEOUT from the default five seconds to one second, on both the host physical machine and each of the VMs. You can also remove the delay, but it's generally safer to leave at least one second. (Always be extremely careful when editing GRUB config, especially on the host physical machine, as an incorrect configuration can prevent your device from booting!)</li>
         </ul>
     </details>
