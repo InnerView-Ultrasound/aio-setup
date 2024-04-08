@@ -46,7 +46,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
 1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it. Once you've selected a name, choose the distribution you'd like to install within the VM:
    <details><summary><strong>Ubuntu Server LTS</strong></summary>
-       Ubuntu no longer seems to provide valid remote distribution tree installation sources, meaning you'll first need to download an .iso image.
+       Ubuntu no longer seems to provide TODO valid remote distribution tree installation sources/valid server location containing an installable distribution image, meaning you'll first need to download an .iso image.
        <pre><code>curl -O https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
    var x = 2
    </code></pre>
