@@ -62,8 +62,8 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    --virt-type kvm \
    --location /tmp/ubuntu-22.04.4-live-server-amd64.iso,kernel=casper/vmlinuz,initrd=casper/initrd \
    --os-variant ubuntujammy \
-   --disk size=32 \ # The amount of storage, in gigabytes
-   --memory 2048 \ # The amount of RAM, in megabytes
+   --disk size=32 \
+   --memory 2048 \
    --graphics none \
    --console pty,target_type=serial \
    --extra-args "console=ttyS0" \
@@ -79,8 +79,8 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    --virt-type kvm \
    --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ \
    --os-variant debian11 \
-   --disk size=32 \ # The amount of storage, in gigabytes
-   --memory 2048 \ # The amount of RAM, in megabytes
+   --disk size=32 \
+   --memory 2048 \
    --graphics none \
    --console pty,target_type=serial \
    --extra-args "console=ttyS0" \
@@ -91,13 +91,14 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
    <details><summary><strong>Debian 12</strong></summary>
        <h4>Creating the VM</h4>
        Create the Debian VM (Don't forget to replace [VM_NAME]):
-       <pre><code>virt-install \
+       <pre><code># If the os-variant "debian12" is unavailable, try "debiantesting" instead
+   virt-install \
    --name [VM_NAME] \
    --virt-type kvm \
    --location http://deb.debian.org/debian/dists/bookworm/main/installer-amd64/ \
-   --os-variant debian12 \ # If this is unavailable, try "debiantesting"
-   --disk size=32 \ # The amount of storage, in gigabytes
-   --memory 2048 \ # The amount of RAM, in megabytes
+   --os-variant debian12 \
+   --disk size=32 \
+   --memory 2048 \
    --graphics none \
    --console pty,target_type=serial \
    --extra-args "console=ttyS0" \
