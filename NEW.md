@@ -50,7 +50,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 2. Choose the distribution you'd like to install within the VM. Here are a few options:
    <details><summary><strong>Ubuntu Server 22.04.4 LTS</strong></summary>
        <h4>Downloading the .iso image</h4>
-       Ubuntu no longer hosts their "legacy ubuntu server installer" images, meaning we cannot pass a URL to virt-install to use as a location. Instead, you must first download an .iso image and pass the path for that image.
+       Ubuntu no longer hosts their "Legacy Ubuntu Server Installer" images, meaning we cannot pass a URL to virt-install to use as a location. Instead, you must first download an .iso image and pass the path for that image.
        <pre><code># Skip this part if you've already downloaded this image
    curl -o /tmp/ubuntu-22.04.4-live-server-amd64.iso https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
    </code></pre>
