@@ -115,21 +115,25 @@ run the following command (**on the host physical machine**). Don't forget to re
     ```
 -->
 
-3. Navigate through the text-based installer. Most options can remain as their default. When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (This lets you easily SSH into the VM in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, it's only virtual, and this only applies to the VM- this will not affect the boot configuration of your host physical machine) and select `/dev/vda` for the bootable device.
-4. Log in to your new VM. After it's finished installing, the VM will have rebooted and presented you with a login prompt. Use `root` as the username, and enter the password you chose during the installation process. Then, run this command (**on the VM**):
+3. Navigate through the text-based installer. Most options can remain as their default.
+   #### For the Ubuntu Server installer
+   When asked, you can set the computer's name to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the HTTP proxy information blank. The installer will create a non-root user. Note down the password you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 1. You'll eventually be given the option to install additional software. Although "Nextcloud" is listed here, it is almost certainly not the option you want, since we are setting up Nextcloud AIO. [Read this](https://github.com/nextcloud/all-in-one?tab=readme-ov-file#how-does-it-work) if you don't understand the difference. You'll be asked about installing `SSH server`, this is optional (This lets you easily SSH into the VM in the future in case you have to perform any maintenance). Finally, disregard the `[FAILED] Failed unmounting /cdrom.` message, and press return.
+   #### For the Debian installer
+   When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (This lets you easily SSH into the VM in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, it's only virtual, and this only applies to the VM- this will not affect the boot configuration of your host physical machine) and select `/dev/vda` for the bootable device.
+5. Log in to your new VM. After it's finished installing, the VM will have rebooted and presented you with a login prompt. Use `root` as the username, and enter the password you chose during the installation process. Ubuntu restricts root account access, so you may need to login with the non-root user and run `sudo su -` to elevate your privileges. Then, run this command (**on the VM**):
    ```shell
    apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
    ```
    This single command will install docker and AIO in reverse proxy mode! As with any other command, carefully read over it and try your best to understand it before running it. This may take a few minutes. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". This concludes the setup needed on this particular VM.
    
    ---
-5. Go ahead and run through steps 1-4 again in order to set up your second VM. When you're finished, proceed down to step 6. (Note: If you downloaded the Ubuntu .iso and no longer want it, you may delete it now.)
-6. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the host physical machine**):
+6. Go ahead and run through steps 1-4 again in order to set up your second VM. When you're finished, proceed down to step 6. (Note: If you downloaded the Ubuntu .iso and no longer want it, you may delete it now.)
+7. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the host physical machine**):
    ```shell
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
    ```
    This command will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
-7. To configure Caddy, we need to know the IP address assigned to each VM. Run (**on the host physical machine**):
+8. To configure Caddy, we need to know the IP address assigned to each VM. Run (**on the host physical machine**):
     ```shell
     virsh net-dhcp-leases default
     ```
@@ -170,7 +174,7 @@ run the following command (**on the host physical machine**). Don't forget to re
    ```shell
    systemctl restart caddy
    ```
-8. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
+9. That's it! Now, all that's left is to set up your instances through the AIO interface as usual by visiting `https://example1.com:8443` and `https://example2.com:8443` in a browser. Once you're finished going through each setup, you can access your new instances simply through their domain names. You can host as many instances with as many domain names as you want this way, as long as you have enough system resources. Enjoy!
     
     <details><summary>A few extra tips for managing this setup!</summary>
         <ul>
