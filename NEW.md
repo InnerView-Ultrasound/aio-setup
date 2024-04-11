@@ -35,7 +35,7 @@ If your host machine has more than 8GB memory available, and you plan to enable 
 **Additional prerequisites:** Your host physical machine needs to have virtualization enabled in it's UEFI/BIOS. It also needs a few tools installed in order to create VMs. Assuming your host machine is a bare-bones Linux server without a desktop environment installed, the easiest way to create VMs is to install *QEMU*, *virsh*, and *virt-install* ([more info](https://wiki.debian.org/KVM)). You only need to do this once. To do this on Debian, run this command (**on the host physical machine**):
 ```shell
 # For host physical machines running Debian
-apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-system virtinst ovmf
+apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-system virtinst ovmf bridge-utils
 # For host physical machines running Ubuntu Server
 # TODO
 ```
