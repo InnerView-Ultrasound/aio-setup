@@ -54,7 +54,7 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
        <pre><code># Skip this part if you've already downloaded this image
    curl -o /tmp/ubuntu-22.04.4-live-server-amd64.iso https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
    </code></pre>
-       <em>Note: You may choose a different place to store the .iso file, but it needs somewhere accessable by QEMU. /tmp and /home should work fine, but choosing something like /root will cause virt-install to fail.</em>
+       <em>Note: You may choose a different place to store the .iso file, but it needs to be somewhere accessable by QEMU. /tmp and /home should work fine, but choosing something like /root will cause virt-install to fail.</em>
        <h4>Creating the VM</h4>
        Now create the Ubuntu VM (Don't forget to replace [VM_NAME]):
        <pre><code>virt-install \
