@@ -48,29 +48,62 @@ apt install --no-install-recommends qemu-system libvirt-clients libvirt-daemon-s
 
 1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it.
 2. Choose the distribution you'd like to install within the VM. Here are a few options:
-   <details><summary><strong>Ubuntu Server LTS</strong></summary>
+   <details><summary><strong>Ubuntu Server 22.04.4 LTS</strong></summary>
+       <h4>Downloading the .iso image</h4>
        Ubuntu no longer hosts their "legacy ubuntu server installer" images, meaning we cannot pass a URL to virt-install to use as a location. Instead, you must first download an .iso image and pass the path for that image.
-       <pre><code># Skip this part if you've already downloaded this image.
+       <pre><code># Skip this part if you've already downloaded this image
    curl -o /tmp/ubuntu-22.04.4-live-server-amd64.iso https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
    </code></pre>
-       Note: You may choose a different place to store the .iso file, but it needs somewhere accessable by QEMU. /tmp and /home should work fine, but choosing something like /root will cause virt-install to fail.
-      Now create the VM (Don't forget to replace [VM_NAME]):
-      <pre><code>virt-install \
-   --name ub \
+       <em>Note: You may choose a different place to store the .iso file, but it needs somewhere accessable by QEMU. /tmp and /home should work fine, but choosing something like /root will cause virt-install to fail.</em>
+       <h4>Creating the VM</h4>
+       Now create the Ubuntu VM (Don't forget to replace [VM_NAME]):
+       <pre><code>virt-install \
+   --name [VM_NAME] \
    --virt-type kvm \
-   --location http://us.archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/ \
-   --os-variant ubuntu-lts-latest \
-   --disk size=32 \
-   --memory 2048 \
+   --location /tmp/ubuntu-22.04.4-live-server-amd64.iso,kernel=casper/vmlinuz,initrd=casper/initrd \
+   --os-variant ubuntujammy \
+   --disk size=32 \ # The amount of storage, in gigabytes
+   --memory 2048 \ # The amount of RAM, in megabytes
    --graphics none \
    --console pty,target_type=serial \
    --extra-args "console=ttyS0" \
-   --autostart
+   --autostart \
+   --boot uefi
    </code></pre>
    </details>
    <details><summary><strong>Debian 11</strong></summary>
+       <h4>Creating the VM</h4>
+       Create the Debian VM (Don't forget to replace [VM_NAME]):
+       <pre><code>virt-install \
+   --name [VM_NAME] \
+   --virt-type kvm \
+   --location http://deb.debian.org/debian/dists/bullseye/main/installer-amd64/ \
+   --os-variant debian11 \
+   --disk size=32 \ # The amount of storage, in gigabytes
+   --memory 2048 \ # The amount of RAM, in megabytes
+   --graphics none \
+   --console pty,target_type=serial \
+   --extra-args "console=ttyS0" \
+   --autostart \
+   --boot uefi
+   </code></pre>
    </details>
    <details><summary><strong>Debian 12</strong></summary>
+       <h4>Creating the VM</h4>
+       Create the Debian VM (Don't forget to replace [VM_NAME]):
+       <pre><code>virt-install \
+   --name [VM_NAME] \
+   --virt-type kvm \
+   --location http://deb.debian.org/debian/dists/bookworm/main/installer-amd64/ \
+   --os-variant debian12 \ # If this is unavailable, try "debiantesting"
+   --disk size=32 \ # The amount of storage, in gigabytes
+   --memory 2048 \ # The amount of RAM, in megabytes
+   --graphics none \
+   --console pty,target_type=serial \
+   --extra-args "console=ttyS0" \
+   --autostart \
+   --boot uefi
+   </code></pre>
    </details>
    For more options, or for help automating this process, check out <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install">this guide</a>.
 
