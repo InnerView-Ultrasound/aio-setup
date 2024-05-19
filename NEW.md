@@ -128,7 +128,21 @@ run the following command (**on the host physical machine**). Don't forget to re
    When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 1. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options, and check the `SSH server` option (This lets you easily SSH into the VM in the future in case you have to perform any maintenance). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, it's only virtual, and this only applies to the VM- this will not affect the boot configuration of your host physical machine) and select `/dev/vda` for the bootable device.
 5. Log in to your new VM. After it's finished installing, the VM will have rebooted and presented you with a login prompt. Use `root` as the username, and enter the password you chose during the installation process. Ubuntu restricts root account access, so you'll probably need to first login with the non-root user, and then run `sudo su -` to elevate your privileges. Then, run this command (**on the VM**):
    ```shell
-   apt install -y curl && curl -fsSL https://get.docker.com | sh && docker run --init --sig-proxy=false --name nextcloud-aio-mastercontainer --restart always --publish 8080:8080 --env APACHE_PORT=11000 --env APACHE_IP_BINDING=0.0.0.0 --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config --volume /var/run/docker.sock:/var/run/docker.sock:ro nextcloud/all-in-one:latest
+   apt install -y curl
+   
+   curl -fsSL https://get.docker.com | sh
+   
+   docker run \
+   --init \
+   --sig-proxy=false \
+   --name nextcloud-aio-mastercontainer \
+   --restart always \
+   --publish 8080:8080 \
+   --env APACHE_PORT=11000 \
+   --env APACHE_IP_BINDING=0.0.0.0 \
+   --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config \
+   --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+   nextcloud/all-in-one:latest
    ```
    This single command will install docker and AIO in reverse proxy mode! As with any other command, carefully read over it and try your best to understand it before running it. This may take a few minutes. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". Now exit the console session with `Ctrl + ]`. This concludes the setup for this particular VM.
    
