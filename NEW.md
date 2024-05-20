@@ -129,7 +129,7 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
 
    We will now run a few commands to install docker and AIO in reverse proxy mode! As with any other commands, carefully read and try your best to understand them before running them.
 
-   **Each time you run the `docker run` command, you'll need to increment the `TALK_PORT` value. For example: 3478, 3479, etc... You may use other values as long as they don't conflict, but to avoid potential problems, make sure they are [greater than 1024](https://github.com/nextcloud/all-in-one/discussions/2517).**
+   **Each time you reach this step and run the `docker run` command below, you'll need to increment the `TALK_PORT` value. For example: 3478, 3479, etc... You may use other values as long as they don't conflict, and make sure they are [greater than 1024](https://github.com/nextcloud/all-in-one/discussions/2517). Make sure to note down the port number you've assigned to this VM/AIO instance.**
 
    Run these commands (**on the VM**):
    ```shell
