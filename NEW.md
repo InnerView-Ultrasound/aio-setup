@@ -155,11 +155,16 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    
    ---
 6. Go ahead and run through steps 1-4 again in order to set up your second VM. When you're finished, proceed down to step 6. *(Note: If you downloaded the Ubuntu .ISO image and no longer need it, you may delete it now.)*
-7. Almost done! All that's left is configuring your reverse proxy. To do this, you first need to install it. Run (**on the host physical machine**):
+7. Almost done! All that's left is configuring your reverse proxy. To do this, you first need to [install it](https://caddyserver.com/docs/install#debian-ubuntu-raspbian). Run (**on the host physical machine**):
    ```shell
-   apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
+   apt update -y
+   apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+   apt update -y
+   apt install -y caddy
    ```
-   This command will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
+   These commands will ensure that your system is up-to-date and install the latest stable version of Caddy via it's official binary source.
 8. To configure Caddy, you need to know the IP address assigned to each VM. Run (**on the host physical machine**):
     ```shell
     virsh net-dhcp-leases default
