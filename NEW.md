@@ -56,7 +56,7 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
 2. Choose the distribution you'd like to install within the VM:
    <details><summary><strong>Ubuntu Server 22.04.4 LTS</strong></summary>
        <h4>Downloading the .iso image</h4>
-       Ubuntu no longer hosts their "Legacy Ubuntu Server Installer" images, meaning we cannot pass a URL to virt-install to use as a location. Instead, you must first download an .iso image and pass the path for that image.
+       Ubuntu no longer hosts their "Legacy Ubuntu Server Installer" images, meaning we can no longer pass a URL to virt-install to use as a location. Instead, you must first download an .iso image to your host machine, and then provide virt-install with the path to that image.
        <pre><code># Skip this part if you've already downloaded this image
    curl -o /tmp/ubuntu-22.04.4-live-server-amd64.iso https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
    </code></pre>
@@ -76,6 +76,8 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    --autostart \
    --boot uefi
    </code></pre>
+       <h4>Using a different version of Ubuntu Server</h4>
+       To use a different Ubuntu Server release, visit <a href="https://releases.ubuntu.com">this page</a> and find the version you want. You will need to adjust the filename and URL for the curl command, and the location and os-variant for the virt-install command, accordingly.
    </details>
    <details><summary><strong>Debian 11</strong></summary>
        <h4>Creating the VM</h4>
@@ -112,8 +114,8 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    --boot uefi
    </code></pre>
    </details>
-   For other Linux distribution options, or for help automating this process, check out <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install">this guide</a>. To use a different Ubuntu Server release, visit <a href="https://releases.ubuntu.com">this page</a> and find the version you want. You will need to adjust the filename and URL for the curl command, and the location and os-variant for the virt-install command, accordingly.
-3. Navigate through the text-based installer. Most options can remain as their default. Here are some tips:
+   <!--To learn more about virt-install or automating this process, see <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install">this guide</a>.-->
+3. Navigate through the text-based installer. Most options can remain as default, but here are some tips:
    <details><summary><strong>For the Ubuntu Server installer</strong></summary>
    When asked about the "type of installation", you can leave the default "Ubuntu Server" without third-party drivers. You can leave the HTTP proxy information blank. In the "Profile Configuration" section, you can set "Your servers name" (hostname) to the same value as the name you gave to your VM (for example, "example1-com"). The installer will only let you create a non-root user. Note down the password you use here! You may skip enabling Ubuntu Pro. (TODO: THIS SECTION MIGHT NEED MOVED UP) You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 2. You'll eventually be given the option to install additional software. Although "Nextcloud" is listed here, you almost certainly do **not** want to select this option, since we are setting up Nextcloud AIO. You'll be asked about installing "SSH server", this is entirely optional (This lets you easily SSH into the VM in the future in case you have to perform any maintenance, but even if you do not install an SSH server, you can still log in using the "virsh console" command). Finally, disregard the "[FAILED] Failed unmounting /cdrom." message, and press return.
    </details>
@@ -126,7 +128,13 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    #### For the Debian installer
    When asked, you can set the hostname to the same value as the name you gave to your VM (for example, `example1-com`). You can leave the domain name and HTTP proxy information blank. Allow the installer to create both a root and a non-root user. Note down the password(s) you use here! You can allow the partitioner to use the entire disk, this only uses the virtual disk that we defined above in step 2. When *tasksel* (Software selection) runs and asks if you want to install additional software, use spacebar and your arrow keys to uncheck the `Debian desktop environment` and `GNOME` options. The `SSH server` option is entirely optional (This lets you easily SSH into the VM in the future in case you have to perform any maintenance, but even if you do not install an SSH server, you can still log in using `virsh console`). Make sure `standard system utilities` is also checked. Hit tab to select "Continue". Finally, disregard the warning about GRUB, allow it to install to your "primary drive" (again, it's only virtual, and this only applies to the VM- this will not affect the boot configuration of your host physical machine) and select `/dev/vda` for the bootable device.
    -->
-5. Log in to your new VM. After it's finished installing, the VM will have rebooted and presented you with a login prompt. Use `root` as the username, and enter the password you chose during the installation process. Ubuntu restricts root account access, so you'll probably need to first login with the non-root user, and then run `sudo su -` to elevate your privileges. Then, run this command (**on the VM**):
+5. Log in to your new VM:
+
+   After it's finished installing, the VM will have rebooted and presented you with a login prompt. For Debian, just use `root` as the username, and enter the password you chose during the installation process. Ubuntu restricts root account access, so you'll need to first login with your non-root user, and then run `sudo su -` to elevate your privileges.
+
+   We will now run a few commands to install docker and AIO in reverse proxy mode! As with any other commands, carefully read and try your best to understand them before running them. *IMPORTANT:* Each time you run the `docker run` command, you'll need to increment the `TALK_PORT` value. For example: 3478, 3479, etc... You may use other values as long as they don't conflict, but to avoid potential problems, make sure they are [greater than 1024](https://github.com/nextcloud/all-in-one/discussions/2517).
+
+   Run these commands (**on the VM**):
    ```shell
    apt install -y curl
    
@@ -146,7 +154,7 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    --volume /var/run/docker.sock:/var/run/docker.sock:ro \
    nextcloud/all-in-one:latest
    ```
-   This single command will install docker and AIO in reverse proxy mode! As with any other command, carefully read over it and try your best to understand it before running it. This may take a few minutes. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". Now exit the console session with `Ctrl + ]`. This concludes the setup for this particular VM.
+   These  The last command may take a few minutes. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". Now exit the console session with `Ctrl + ]`. This concludes the setup for this particular VM.
    
    ---
 6. Go ahead and run through steps 1-4 again in order to set up your second VM. When you're finished, proceed down to step 6. (Note: If you downloaded the Ubuntu .iso and no longer want it, you may delete it now.)
