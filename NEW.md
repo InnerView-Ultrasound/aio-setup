@@ -63,7 +63,7 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    </code></pre>
        <em>Note: You may choose a different place to store the .ISO file, but it needs to be somewhere accessible by QEMU. "/tmp" and "/home" work well, but choosing a location like "/root" will cause the next command to fail.</em>
        <h4>Creating the VM</h4>
-       Now create the Ubuntu VM (Don't forget to replace [VM_NAME]):
+       Now create the Ubuntu Server VM (Don't forget to replace [VM_NAME]):
        <pre><code>virt-install \
    --name [VM_NAME] \
    --virt-type kvm \
