@@ -26,7 +26,7 @@ This guide assumes that you have forwarded ports 443 and 8443 to your host physi
 </details>
 
 <details><summary><strong>A note for VPS users</strong></summary>
-If you want to do this on a VPS, and your VPS is KVM-based and provides a static IP address, you can likely benefit from this guide too! Simply replace the words "host physical machine" with "VPS" and follow along. Good luck!
+If you want to do this on a VPS, and your VPS is KVM-based and provides a static IP address, you can likely benefit from this guide too! Simply replace the words "host physical machine" with "VPS" and follow along.
 </details>
 
 **Before starting:** Make sure your host physical machine has enough resources. A host machine with 8GB RAM and 100GB storage is sufficient for running two fairly minimal VMs, with 2GB RAM and 32GB storage allocated to each VM. This guide assumes you have these resources at the minimum. This is fine for just testing the setup, but you will probably want to allocate more resources to your VMs if you plan to use this for day-to-day use.
