@@ -131,7 +131,8 @@ run the following command (**on the host physical machine**). Don't forget to re
    apt install -y curl
    
    curl -fsSL https://get.docker.com | sh
-   
+
+   # Make sure you increment the TALK_PORT value every time you run this!
    docker run \
    --init \
    --sig-proxy=false \
@@ -140,6 +141,7 @@ run the following command (**on the host physical machine**). Don't forget to re
    --publish 8080:8080 \
    --env APACHE_PORT=11000 \
    --env APACHE_IP_BINDING=0.0.0.0 \
+   --env TALK_PORT=3478 \
    --volume nextcloud_aio_mastercontainer:/mnt/docker-aio-config \
    --volume /var/run/docker.sock:/var/run/docker.sock:ro \
    nextcloud/all-in-one:latest
