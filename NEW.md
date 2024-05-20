@@ -100,7 +100,7 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    <details><summary><strong>Debian 12</strong></summary>
        <h4>Creating the VM</h4>
        Create the Debian VM (Don't forget to replace [VM_NAME]):
-       <pre><code># If the os-variant "debian12" is unavailable, try "debiantesting" instead
+       <pre><code># If the os-variant "debian12" is unknown, try "debiantesting" instead
    virt-install \
    --name [VM_NAME] \
    --virt-type kvm \
