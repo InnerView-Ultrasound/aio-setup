@@ -55,12 +55,13 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
 1. Choose a name for your VM. A good choice is to name each VM the same as the domain name that will be used to access it.
 2. Choose the distribution you'd like to install within the VM:
    <details><summary><strong>Ubuntu Server 22.04.4 LTS</strong></summary>
-       <h4>Downloading the .iso image</h4>
-       Ubuntu no longer hosts their "Legacy Ubuntu Server Installer" images, meaning we can no longer pass a URL to virt-install to use as a location. Instead, you must first download an .iso image to your host machine, and then provide virt-install with the path to that image.
+       <h4>Downloading the .ISO image</h4>
+       You must first download an .ISO image to your host machine, and then provide virt-install with the path to that image.
+       <!-- This step is required because Ubuntu no longer hosts their "Legacy Ubuntu Server Installer" images, meaning we can no longer pass a URL to virt-install to use as a location. -->
        <pre><code># Skip this part if you've already downloaded this image
    curl -o /tmp/ubuntu-22.04.4-live-server-amd64.iso https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso
    </code></pre>
-       <em>Note: You may choose a different place to store the .iso file, but it needs to be somewhere accessable by QEMU. /tmp and /home should work fine, but choosing something like /root will cause virt-install to fail.</em>
+       <em>Note: You may choose a different place to store the .ISO file, but it needs to be somewhere accessable by QEMU. "/tmp" and "/home" work well, but choosing a location like "/root" will cause the next command to fail.</em>
        <h4>Creating the VM</h4>
        Now create the Ubuntu VM (Don't forget to replace [VM_NAME]):
        <pre><code>virt-install \
@@ -157,7 +158,7 @@ apt install --no-install-recommends qemu-system qemu-utils libvirt-clients libvi
    These  The last command may take a few minutes. When it's finished, you should see a success message, saying "Initial startup of Nextcloud All-in-One complete!". Now exit the console session with `Ctrl + ]`. This concludes the setup for this particular VM.
    
    ---
-6. Go ahead and run through steps 1-4 again in order to set up your second VM. When you're finished, proceed down to step 6. (Note: If you downloaded the Ubuntu .iso and no longer want it, you may delete it now.)
+6. Go ahead and run through steps 1-4 again in order to set up your second VM. When you're finished, proceed down to step 6. *(Note: If you downloaded the Ubuntu .ISO image and no longer need it, you may delete it now.)*
 7. Almost done! All that's left is configuring our reverse proxy. To do this, we first need to install it. Run (**on the host physical machine**):
    ```shell
    apt update -y && apt install -y debian-keyring debian-archive-keyring apt-transport-https curl && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && apt update -y && apt install -y caddy
